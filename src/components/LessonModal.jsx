@@ -259,10 +259,12 @@ export default function LessonModal({
                 )}
               </div>
 
-              {/* Show interactive widget on the first step or last learn step */}
-              {topic.widget && stepIdx === 0 && (
-                <InteractiveWidget type={topic.widget} />
-              )}
+              {/* Show interactive widget on the designated step or fallback to step 0 */}
+              {topic.widget &&
+                (currentStep.showWidget ||
+                  (stepIdx === 0 && !steps.some((s) => s.showWidget))) && (
+                  <InteractiveWidget type={topic.widget} />
+                )}
             </div>
           )}
 

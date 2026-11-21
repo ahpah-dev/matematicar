@@ -5,6 +5,8 @@ export default function InteractiveWidget({ type }) {
   switch (type) {
     case 'venn':
       return <VennWidget />;
+    case 'mapping':
+      return <MappingWidget />;
     case 'linear':
       return <LinearWidget />;
     case 'quadratic':
@@ -30,6 +32,77 @@ export default function InteractiveWidget({ type }) {
     default:
       return null;
   }
+}
+
+function MappingWidget() {
+  const [mode, setMode] = useState('bijekcija');
+  const modes = {
+    injekcija: {
+      title: 'Injekcija ("1-na-1")',
+      desc: 'Svaka strelica gađa RAZLIČIT cilj u B — nema gužve! (Može neko u B ostati prazan.)',
+      arrows: [[0, 0], [1, 1], [2, 2]],
+      bCount: 4,
+    },
+    surjekcija: {
+      title: 'Surjekcija ("NA" ceo B)',
+      desc: 'Svaki element u B je pogođen bar jednom! Nijedna stolica u B nije prazna.',
+      arrows: [[0, 0], [1, 1], [2, 1]],
+      bCount: 2,
+    },
+    bijekcija: {
+      title: 'Bijekcija (Savršen par!)',
+      desc: 'I injekcija i surjekcija! Svako iz A ima tačno jednog para u B — zato ima inverznu funkciju!',
+      arrows: [[0, 0], [1, 1], [2, 2]],
+      bCount: 3,
+    },
+  };
+  const m = modes[mode];
+  const aY = [30, 65, 100];
+  const bY = m.bCount === 2 ? [45, 85] : m.bCount === 3 ? [30, 65, 100] : [22, 50, 78, 106];
+
+  return (
+    <div className="widget-box">
+      <div className="widget-title"><MathText text="Vrste preslikavanja $f: A \\to B$ — klikni tip!" /></div>
+      <div className="widget-tabs">
+        <button className={`widget-pill ${mode === 'injekcija' ? 'active' : ''}`} onClick={() => setMode('injekcija')}>Injekcija</button>
+        <button className={`widget-pill ${mode === 'surjekcija' ? 'active' : ''}`} onClick={() => setMode('surjekcija')}>Surjekcija</button>
+        <button className={`widget-pill ${mode === 'bijekcija' ? 'active' : ''}`} onClick={() => setMode('bijekcija')}>Bijekcija</button>
+      </div>
+      <svg viewBox="0 0 260 130" className="widget-svg">
+        <ellipse cx="62" cy="65" rx="34" ry="54" fill="rgba(28,176,246,0.14)" stroke="#1CB0F6" strokeWidth="2.5" />
+        <ellipse cx="198" cy="65" rx="34" ry="54" fill="rgba(88,204,2,0.14)" stroke="#58CC02" strokeWidth="2.5" />
+        <text x="62" y="12" fontSize="11" fontWeight="900" textAnchor="middle" fill="#1CB0F6">A</text>
+        <text x="198" y="12" fontSize="11" fontWeight="900" textAnchor="middle" fill="#58CC02">B</text>
+        {m.arrows.map(([ai, bi], idx) => (
+          <line
+            key={idx}
+            x1="70"
+            y1={aY[ai]}
+            x2="188"
+            y2={bY[bi]}
+            stroke="#FF9600"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+        ))}
+        {aY.map((y, i) => (
+          <g key={`a-${i}`}>
+            <circle cx="62" cy={y} r="7" fill="#1CB0F6" />
+            <text x="62" y={y + 4} fontSize="10" fontWeight="900" textAnchor="middle" fill="#fff">{i + 1}</text>
+          </g>
+        ))}
+        {bY.map((y, i) => (
+          <g key={`b-${i}`}>
+            <circle cx="198" cy={y} r="7" fill="#58CC02" />
+            <text x="198" y={y + 4} fontSize="10" fontWeight="900" textAnchor="middle" fill="#fff">{String.fromCharCode(97 + i)}</text>
+          </g>
+        ))}
+      </svg>
+      <div className="widget-caption">
+        <strong>{m.title}:</strong> {m.desc}
+      </div>
+    </div>
+  );
 }
 
 function VennWidget() {
