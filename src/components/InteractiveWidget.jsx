@@ -62,7 +62,7 @@ function MappingWidget() {
 
   return (
     <div className="widget-box">
-      <div className="widget-title"><MathText text="Vrste preslikavanja $f: A \\to B$ — klikni tip!" /></div>
+      <div className="widget-title"><MathText text={"Vrste preslikavanja $f: A \\to B$ — klikni tip!"} /></div>
       <div className="widget-tabs">
         <button className={`widget-pill ${mode === 'injekcija' ? 'active' : ''}`} onClick={() => setMode('injekcija')}>Injekcija</button>
         <button className={`widget-pill ${mode === 'surjekcija' ? 'active' : ''}`} onClick={() => setMode('surjekcija')}>Surjekcija</button>
